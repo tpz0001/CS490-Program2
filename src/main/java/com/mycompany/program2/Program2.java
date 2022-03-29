@@ -34,13 +34,31 @@ public class Program2 {
         }
         */
         //Create a consumer thread
-        Consumer consumer = new Consumer(heap, 1000);
-        Thread threadOne = new Thread(consumer);
+        int consumerIdleTime_ms = 1000;
+        Consumer consumer1 = new Consumer(heap, consumerIdleTime_ms, 1);
+        consumerIdleTime_ms -= 100;
+        Consumer consumer2 = new Consumer(heap, consumerIdleTime_ms, 2);
+        Thread threadOne = new Thread(consumer1);
+        Thread threadTwo = new Thread(consumer2);
+        
+        int producerRuntime_ms = 5000;
+        Producer producer = new Producer(heap, producerRuntime_ms);
+        Thread threadProducer = new Thread(producer);
+        //Create a producer thread
+
         threadOne.start();
+        threadProducer.start();
+        threadTwo.start();
         try{
             threadOne.join();
+            threadProducer.join();
+            threadTwo.join();
         } catch(Exception e){
             //TODO: handle error
+        }
+        
+        for(ProcessNode node : heap.getHeap()){
+            System.out.println(node.getPriority());
         }
         
         System.exit(0);

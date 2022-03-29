@@ -16,10 +16,12 @@ public class Consumer implements Runnable {
     private int idleTime_ms;
     private MinHeap heap;
     private ProcessNode currNode;
+    private int consumerID;//for debug/demonstration
     
-    public Consumer(MinHeap heap, int idleTime_ms){
+    public Consumer(MinHeap heap, int idleTime_ms, int consumerID){
         this.heap = heap;
         this.idleTime_ms = idleTime_ms;
+        this.consumerID = consumerID;
     }
     
     private void getNode(ProcessNode node){
@@ -46,7 +48,7 @@ public class Consumer implements Runnable {
     
     public void run(){
         int i = 0;
-        while(i < 10){//arbitrary run time
+        while(i < 15){//arbitrary run time
             if(heap.getHeap().length == 0){//if heap is empty, we will idle
                 currNode = null;
             }
@@ -54,7 +56,7 @@ public class Consumer implements Runnable {
             
             //TODO: Do I need to compare to null?
             if(currNode == null){//if node does not exist, wait for prescripted time
-                System.out.println("Waiting...");
+                System.out.println("Consumer " + consumerID + " is Waiting...");
                 try{
                     Thread.sleep(idleTime_ms);
                 }catch(InterruptedException ex){
@@ -62,7 +64,8 @@ public class Consumer implements Runnable {
                 }
             }
             else{//simulate work by waiting for process execution time
-                System.out.println("Running Process...");
+                System.out.println("Consumer " + consumerID + 
+                        " Running Process " + currNode.getProcessId());
                 try{
                     Thread.sleep(currNode.getTimeSlice());
                 } catch(InterruptedException ex){

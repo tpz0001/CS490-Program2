@@ -14,10 +14,11 @@ import java.util.Arrays;
  * @author Tim
  */
 public class MinHeap {
-    
+    private int nextProcessId; //use to properly label added processes
     private ProcessNode[] heap;
     
     public MinHeap(ProcessNode[] inNodes){
+        nextProcessId = inNodes.length;
         heap = inNodes;
         MakeHeap();
     }
@@ -58,12 +59,16 @@ public class MinHeap {
     public ProcessNode[] getHeap(){
         return heap;
     }
+    public int getNextProcessId(){
+        return nextProcessId;
+    }
     
     /**
      * insert a node into the heap, structure will be preserved
      * @param node 
      */
     public void addNode(ProcessNode node){
+        nextProcessId += 1; //increment id for tracking/creating new processes
         heap = Arrays.copyOf(heap, heap.length + 1);//increase size of heap
         heap[heap.length-1] = node;//add new node to the end
         MakeHeap();//remake the heap
